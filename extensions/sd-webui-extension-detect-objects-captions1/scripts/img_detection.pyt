@@ -85,7 +85,7 @@ mydb = mysql.connector.connect(
     host="localhost",
     user="root",
     password="1*AllahAkbarMJ",
-    database="sdwebui_extention_local")
+    database="sdwebui_extension_local")
 
 currentDir = str(Path(os.getcwd()).absolute())
 assetsDir = currentDir+"/output/assets"
