@@ -30,6 +30,7 @@ notification.mp3
 /textual_inversion
 .vscode
 /extensions
+/extensions/sd-webui-extension-detect-objects-captions
 /test/stdout.txt
 /test/stderr.txt
 /cache.json*
