@@ -115,6 +115,8 @@ def detect_image(image_path_or_url: str):
     sql4 = "INSERT INTO object_detection_table (object_id, image_id, model_used, object_name, object_path, confidence_score, bounding_box, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
     sql5 = "SELECT IFNULL(MAX(caption_id), 0) FROM captions_table"
     sql6 = "INSERT INTO captions_table (caption_id, image_id, text, model_used, created_at) VALUES (%s, %s, %s, %s, %s)"
+    sql7 = "SELECT IFNULL(MAX(object_id), 0) FROM object_captions"
+    sql8 = "INSERT INTO object_captions (object_caption_id, object_id, image_id, caption_text, model_used, created_at) VALUES (%s, %s, %s, %s, %s, %s)"
 
     mycursor.execute(sql1)
     maxImgId = mycursor.fetchone()[0] + 1
@@ -122,6 +124,10 @@ def detect_image(image_path_or_url: str):
     maxObjId = mycursor.fetchone()[0] + 1
     mycursor.execute(sql5)
     maxCapId = mycursor.fetchone()[0] + 1
+    mycursor.execute(sql7)
+    maxObjCapId = mycursor.fetchone()[0] + 1
+
+    capObjId = maxObjId
 
     if image_path_or_url.startswith(('http://', 'https://')):
         resp = urlopen(image_path_or_url)
@@ -155,6 +161,7 @@ def detect_image(image_path_or_url: str):
     mydb.commit()
 
     safe_texts = generate_image_caption(image_path_or_url = image_path_or_url, model_id = "llava-hf/llava-1.5-7b-hf")
+    created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
     val3 = []
     print("cap detection:{}".format(len(safe_texts)))
@@ -166,6 +173,27 @@ def detect_image(image_path_or_url: str):
         maxCapId += 1
 
     mycursor.executemany(sql6, val3)
-    mydb.commit() 
+    mydb.commit()
+
+    val4 = []
+
+    for i in range(0, len(boxes)):
+
+        safe_texts = generate_image_caption(image_path_or_url = assetsDir+'/{img_id}-{obj_id}.jpg'.format(img_id = maxImgId, obj_id = capObjId), model_id = "llava-hf/llava-1.5-7b-hf")
+        safe_txt_List = []
+        for t in safe_texts:
+            if len(t) >= capLen:
+                safe_txt_List.append(t)
+
+        created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        val4.append((maxObjCapId, capObjId, maxImgId, json.dumps(safe_txt_List), "llava-hf/llava-1.5-7b-hf", created_at))
+        
+        capObjId += 1
+        maxObjCapId += 1
+
+    mycursor.executemany(sql8, val4)
+    mydb.commit()     
+    
 
 detect_image(sys.argv[1])        
