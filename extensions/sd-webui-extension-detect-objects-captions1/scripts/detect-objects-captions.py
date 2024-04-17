@@ -33,7 +33,7 @@ from datetime import datetime
 #                 return ()
 
 #         def load_settings(_,self):
-#              settingsFile = "extensions/sd-webui-extension-detect-objects-captions/settings.st"
+#              settingsFile = "extensions/sd-webui-extension-detect-objects-captions1/settings.st"
 #              global objWidth   
 #              global objHeight 
 #              global confl 
@@ -57,7 +57,7 @@ def img_detection(progress=gr.Progress()):
         objs = 0
         caps = 0
         processing = True
-        op = subprocess.Popen(["python", "extensions/sd-webui-extension-detect-objects-captions/scripts/img_detection.pyt", imgs[added_img_indicies[imgclicked]]], stdout=subprocess.PIPE, universal_newlines=True)
+        op = subprocess.Popen(["python", "extensions/sd-webui-extension-detect-objects-captions1/scripts/img_detection.pyt", imgs[added_img_indicies[imgclicked]]], stdout=subprocess.PIPE, universal_newlines=True)
         for stdout_line in iter(op.stdout.readline, ""):
              if stdout_line.startswith("obj detection:"):
                   objs = int(stdout_line[14:])
@@ -158,7 +158,7 @@ def save_settings(obj_width, obj_height,_conf_level, cap_length, progress=gr.Pro
      settings = ["Min object width: {} \n".format(obj_width), "Min object height: {} \n".format(obj_height), 
                  "Min confidence level: {} \n".format(_conf_level), "Min caption length: {} \n".format(cap_length)]
 
-     file = open('extensions/sd-webui-extension-detect-objects-captions/settings.st', 'w')
+     file = open('extensions/sd-webui-extension-detect-objects-captions1/settings.st', 'w')
 
          # Writing settings
      for i in progress.tqdm(range(4), desc="Processing..."):
@@ -289,7 +289,7 @@ def on_ui_tabs():
   label1 = None
   label2 = None
   added_imgs = [None] * 48
-  settingsFile = "extensions/sd-webui-extension-detect-objects-captions/settings.st"
+  settingsFile = "extensions/sd-webui-extension-detect-objects-captions1/settings.st"
 
   file = open(settingsFile, 'r')
 

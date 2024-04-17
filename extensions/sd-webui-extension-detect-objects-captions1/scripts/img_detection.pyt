@@ -97,7 +97,7 @@ if not isExist:
 
 mycursor = mydb.cursor()
 
-settingsFile = currentDir+"/extensions/sd-webui-extension-detect-objects-captions/settings.st"
+settingsFile = currentDir+"/extensions/sd-webui-extension-detect-objects-captions1/settings.st"
 
 file = open(settingsFile, 'r')
 
