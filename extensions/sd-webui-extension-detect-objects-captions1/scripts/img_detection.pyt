@@ -115,7 +115,7 @@ def detect_image(image_path_or_url: str):
     sql4 = "INSERT INTO object_detection_table (object_id, image_id, model_used, object_name, object_path, confidence_score, bounding_box, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
     sql5 = "SELECT IFNULL(MAX(caption_id), 0) FROM captions_table"
     sql6 = "INSERT INTO captions_table (caption_id, image_id, text, model_used, created_at) VALUES (%s, %s, %s, %s, %s)"
-    sql7 = "SELECT IFNULL(MAX(object_id), 0) FROM object_captions"
+    sql7 = "SELECT IFNULL(MAX(object_caption_id), 0) FROM object_captions"
     sql8 = "INSERT INTO object_captions (object_caption_id, object_id, image_id, caption_text, model_used, created_at) VALUES (%s, %s, %s, %s, %s, %s)"
 
     mycursor.execute(sql1)
