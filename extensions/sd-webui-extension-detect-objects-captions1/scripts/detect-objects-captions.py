@@ -54,19 +54,21 @@ from datetime import datetime
 def img_detection(progress=gr.Progress()):
     global processing
     if imgclicked != -1 and not processing:
-        objs = 0
-        caps = 0
         processing = True
         op = subprocess.Popen(["python", "extensions/sd-webui-extension-detect-objects-captions1/scripts/img_detection.pyt", imgs[added_img_indicies[imgclicked]]], stdout=subprocess.PIPE, universal_newlines=True)
-        for stdout_line in iter(op.stdout.readline, ""):
-             if stdout_line.startswith("obj detection:"):
-                  objs = int(stdout_line[14:])
-             if stdout_line.startswith("cap detection:"):
-                  caps = int(stdout_line[14:])     
-                  for i in progress.tqdm(range(objs*2+caps), desc="Processing..."):
-                        time.sleep(0.1)
-                  processing = False        
-                  return ["Detection Done", "Captions Done"]
+        iter_line = iter(op.stdout.readline, "")     
+        for i in progress.tqdm(range(0,3), desc="Processing..."):
+            while(True):
+                stdout_line = next(iter_line)
+                if stdout_line.startswith("objs detected"):
+                     break
+                if stdout_line.startswith("caps detected"):
+                     break
+                if stdout_line.startswith("obj caps detected"):
+                     break
+              
+        processing = False        
+        return ["Detection Done", "Captions Done"]
     
     return ["Error", "Select Image"]
 

@@ -144,7 +144,7 @@ def detect_image(image_path_or_url: str):
     
     # object_id, image_id, model_used, object_name, object_path, confidence_score, bounding_box, created_at
     val2 = []
-    print("obj detection:{}".format(len(boxes)))
+    #print("obj detection:{}".format(len(boxes)))
     for i in range(0, len(boxes)):
         width = boxes[i][2] - boxes[i][0]
         height = boxes[i][3] - boxes[i][1]
@@ -160,11 +160,13 @@ def detect_image(image_path_or_url: str):
     mycursor.executemany(sql4, val2)
     mydb.commit()
 
+    print("objs detected")
+
     safe_texts = generate_image_caption(image_path_or_url = image_path_or_url, model_id = "llava-hf/llava-1.5-7b-hf")
     created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
     val3 = []
-    print("cap detection:{}".format(len(safe_texts)))
+    #print("cap detection:{}".format(len(safe_texts)))
     for t in safe_texts:
         if len(t) < capLen:
             continue
@@ -174,6 +176,8 @@ def detect_image(image_path_or_url: str):
 
     mycursor.executemany(sql6, val3)
     mydb.commit()
+
+    print("caps detected")
 
     val4 = []
 
@@ -193,7 +197,8 @@ def detect_image(image_path_or_url: str):
         maxObjCapId += 1
 
     mycursor.executemany(sql8, val4)
-    mydb.commit()     
-    
+    mydb.commit()
+
+    print("obj caps detected")
 
 detect_image(sys.argv[1])        
