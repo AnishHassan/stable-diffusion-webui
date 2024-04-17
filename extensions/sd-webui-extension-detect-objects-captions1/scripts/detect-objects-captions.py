@@ -63,7 +63,7 @@ def img_detection(progress=gr.Progress()):
                   objs = int(stdout_line[14:])
              if stdout_line.startswith("cap detection:"):
                   caps = int(stdout_line[14:])     
-                  for i in progress.tqdm(range(objs+caps), desc="Processing..."):
+                  for i in progress.tqdm(range(objs*2+caps), desc="Processing..."):
                         time.sleep(0.1)
                   processing = False        
                   return ["Detection Done", "Captions Done"]
